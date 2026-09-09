@@ -2,16 +2,16 @@ from datetime import date
 
 dish = "Курица с рисом"
 ingredients = ['рис', 'курица', 'приправы']
+all_ingredients = ['рис', 'курица', 'приправы', 'соль', 'масло', 'овощи']
 day_of_week = '2026-09-09'
 meal = 'обед'
 dish_calories = 200 
 
 
-def check_dish_availability(dish, ingredients): #проверка на наличие всех ингридиентов
-    available_ingredients = ['рис', 'курица', 'приправы', 'соль', 'масло', 'овощи']
+def check_dish_availability(dish, ingredients, all_ingredients): #проверка на наличие всех ингридиентов
     missing = []
     for ing in ingredients:
-        if ing not in available_ingredients:
+        if ing not in all_ingredients:
             missing.append(ing)
     
     if missing:
@@ -40,6 +40,6 @@ def get_serving_suggestion(meal): #сервировка блюда
     }
     return suggestions.get(meal.lower(), '🍽️ Подавать на тарелке')
 
-print(check_dish_availability(dish, ingredients))
+print(check_dish_availability(dish, ingredients, all_ingredients))
 print(get_calories_per_portion(dish, dish_calories))
 print(get_serving_suggestion(meal))
