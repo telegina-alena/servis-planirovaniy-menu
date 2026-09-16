@@ -2,7 +2,7 @@ from datetime import date
 
 dish = "Курица с рисом"
 ingredients = ['рис', 'курица', 'приправы']
-all_ingredients = ['рис', 'курица', 'приправы', 'соль', 'масло', 'овощи']
+all_ingredients = ['рис', 'курица', 'соль', 'масло', 'овощи']
 day_of_week = '2026-09-09'
 meal = 'обед'
 dish_calories = 200 
