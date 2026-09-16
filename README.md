@@ -26,9 +26,9 @@
 - калории
 
 ## Основные функции
-- check_dish_availability
-- get_calories_per_portion
-- get_serving_suggestion
+- check_dish_availability - проверка на наличие всех ингридиентов
+- get_calories_per_portion - рассчет каллориев на одну порцию
+- get_serving_suggestion - сервировка блюда
 
 ## План развития
 - разработка API;
