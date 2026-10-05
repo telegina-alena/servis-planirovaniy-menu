@@ -1,45 +1,135 @@
-from datetime import date
+"""Точка запуска приложения «Кулинарная книга»."""
+from models import Dish, Ingredient
+from models.dishes import (
+    add_dish,
+    filter_dishes_by_meal,
+    find_dish,
+    find_dish_by_id,
+    show_dishes,
+    sort_dishes_by_calories,
+)
+from storage import (
+    ingredient_names,
+    load_dishes,
+    load_ingredients,
+    save_dishes,
+)
+from utils import input_int, input_non_empty
 
-dish = "Курица с рисом"
-ingredients = ['рис', 'курица', 'приправы']
-all_ingredients = ['рис', 'курица', 'соль', 'масло', 'овощи']
-day_of_week = '2026-09-09'
-meal = 'обед'
-dish_calories = 200 
 
-
-def check_dish_availability(dish, ingredients, all_ingredients): #проверка на наличие всех ингридиентов
-    missing = []
+def show_ingredients(ingredients: list[Ingredient]) -> None:
+    """Вывести доступные ингредиенты (объекты Ingredient)."""
+    if not ingredients:
+        print("Список ингредиентов пуст.")
+        return
+    print("Доступные ингредиенты:")
     for ing in ingredients:
-        if ing not in all_ingredients:
-            missing.append(ing)
-    
-    if missing:
-        return f"Не хватает ингредиентов: {', '.join(missing)}"
-    else:
-        return f"Все ингредиенты есть! Можно готовить {dish}"
+        print(f"  [{ing.id}] {ing}")
 
-def get_calories_per_portion(dish, dish_calories, portions=1): #рассчет каллориев на одну порцию
-    if portions > 0:
-        per_portion = dish_calories // portions
-    else: 
-        return 0
-    
-    if per_portion <= 200:
-        return f"{dish} - {per_portion} ккал - легкое блюдо"
-    elif per_portion <= 400:
-        return f"{dish} - {per_portion} ккал - средняя калорийность"
-    else:
-        return f"{dish} - {per_portion} ккал - калорийное блюдо"
 
-def get_serving_suggestion(meal): #сервировка блюда
-    suggestions = {
-        'завтрак': 'Подавать на маленькой тарелке',
-        'обед': 'Подавать на большой тарелке с гарниром',
-        'ужин': 'Подавать на средней тарелке'
+def menu_add_dish(dishes: list[Dish]) -> None:
+    """Сценарий добавления блюда."""
+    name = input_non_empty("Название блюда: ")
+    raw = input_non_empty("Ингредиенты через запятую: ")
+    ingredients = [i.strip() for i in raw.split(",") if i.strip()]
+    calories = input_int("Калорийность (ккал): ")
+    meal = input_non_empty("Приём пищи (завтрак/обед/ужин): ")
+    dish = add_dish(dishes, name, ingredients, calories, meal)
+    print(f"Блюдо добавлено с ID={dish.id}.")
+
+
+def menu_find_dish(dishes: list[Dish]) -> None:
+    """Сценарий поиска блюда по названию."""
+    query = input_non_empty("Подстрока для поиска: ")
+    show_dishes(find_dish(dishes, query))
+
+
+def menu_check_availability(
+    dishes: list[Dish], ingredients: list[Ingredient]
+) -> None:
+    """Сценарий проверки наличия ингредиентов (метод Dish)."""
+    dish_id = input_int("ID блюда: ")
+    dish = find_dish_by_id(dishes, dish_id)
+    if dish is None:
+        print("Блюдо с таким ID не найдено.")
+        return
+    print(dish.is_available(ingredient_names(ingredients)))
+
+
+def menu_calories(dishes: list[Dish]) -> None:
+    """Сценарий расчёта калорий на порцию (метод Dish)."""
+    dish_id = input_int("ID блюда: ")
+    dish = find_dish_by_id(dishes, dish_id)
+    if dish is None:
+        print("Блюдо с таким ID не найдено.")
+        return
+    portions = input_int("Количество порций: ")
+    print(dish.calories_per_portion(portions))
+
+
+def menu_suggestion(dishes: list[Dish]) -> None:
+    """Сценарий подсказки по сервировке (метод Dish)."""
+    dish_id = input_int("ID блюда: ")
+    dish = find_dish_by_id(dishes, dish_id)
+    if dish is None:
+        print("Блюдо с таким ID не найдено.")
+        return
+    print(dish.serving_suggestion())
+
+
+def menu_filter_by_meal(dishes: list[Dish]) -> None:
+    """Сценарий отбора блюд по приёму пищи."""
+    meal = input_non_empty("Приём пищи (завтрак/обед/ужин): ")
+    show_dishes(filter_dishes_by_meal(dishes, meal))
+
+
+def menu_sort_by_calories(dishes: list[Dish]) -> None:
+    """Сценарий сортировки блюд по калорийности."""
+    show_dishes(sort_dishes_by_calories(dishes))
+
+
+def main() -> None:
+    """Точка входа: загрузка данных и цикл меню."""
+    dishes: list[Dish] = load_dishes()
+    ingredients: list[Ingredient] = load_ingredients()
+
+    actions = {
+        "1": ("Показать все блюда", lambda: show_dishes(dishes)),
+        "2": ("Показать ингредиенты",
+              lambda: show_ingredients(ingredients)),
+        "3": ("Найти блюдо по названию", lambda: menu_find_dish(dishes)),
+        "4": ("Отобрать по приёму пищи",
+              lambda: menu_filter_by_meal(dishes)),
+        "5": ("Отсортировать по калорийности",
+              lambda: menu_sort_by_calories(dishes)),
+        "6": ("Проверить наличие ингредиентов",
+              lambda: menu_check_availability(dishes, ingredients)),
+        "7": ("Рассчитать калории на порцию",
+              lambda: menu_calories(dishes)),
+        "8": ("Подсказать сервировку",
+              lambda: menu_suggestion(dishes)),
+        "9": ("Добавить блюдо", lambda: menu_add_dish(dishes)),
     }
-    return suggestions.get(meal.lower(), '🍽️ Подавать на тарелке')
 
-print(check_dish_availability(dish, ingredients, all_ingredients))
-print(get_calories_per_portion(dish, dish_calories))
-print(get_serving_suggestion(meal))
+    print("== Кулинарная книга ==")
+    while True:
+        print()
+        for key, (title, _) in actions.items():
+            print(f"{key}. {title}")
+        print("0. Выход")
+
+        choice = input("Выберите действие: ").strip()
+        if choice == "0":
+            save_dishes(dishes)
+            print("Данные сохранены. До встречи!")
+            break
+
+        action = actions.get(choice)
+        if action is None:
+            print("Неизвестная команда, попробуйте снова.")
+            continue
+        action[1]()
+
+
+if __name__ == "__main__":
+    main()
