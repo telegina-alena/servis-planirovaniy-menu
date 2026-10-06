@@ -1,3 +1,7 @@
-from django.shortcuts import render
+from django.http import HttpResponse
 
-# Create your views here.
+def bookings(request):
+    return HttpResponse("Список ингедиентов")
+
+def booking_detail(request, ingredient_id):
+    return HttpResponse(f"Бронирование {ingredient_id}")

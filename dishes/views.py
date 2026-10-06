@@ -1,3 +1,7 @@
-from django.shortcuts import render
+from django.http import HttpResponse
 
-# Create your views here.
+def rooms(request):
+    return HttpResponse("Список блюд")
+
+def room_detail(request, dish_id):
+    return HttpResponse(f"Помещение {dish_id}")
