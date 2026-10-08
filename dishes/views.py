@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 
-def rooms(request):
+def dishes(request):
     return HttpResponse("Список блюд")
 
-def room_detail(request, dish_id):
-    return HttpResponse(f"Помещение {dish_id}")
+def dish_detail(request, dish_id):
+    return HttpResponse(f"Блюдо {dish_id}")
