@@ -1,7 +1,13 @@
 from django.http import HttpResponse
+from django.shortcuts import render
+
 
 def page(title, content):
-    bootstrap = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    bootstrap = (
+        "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/"
+        "dist/css/bootstrap.min.css"
+    )
+
     return f"""<!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -22,15 +28,10 @@ def page(title, content):
 </body>
 </html>"""
 
+
 def index(request):
-    content = """
-    <h1 class="display-4">Кулинарная книга</h1>
-    <p class="lead">Сервис планирования меню и расчёта калорий.</p>
-    <p>Основные разделы:</p>
-    <a href="/dishes/" class="btn btn-primary me-2">Блюда</a>
-    <a href="/ingredients/" class="btn btn-secondary">Ингредиенты</a>
-    """
-    return HttpResponse(page("Главная - Кулинарная книга", content))
+    return render(request, 'homepage/index.html')
+
 
 def page_not_found(request, exception):
     content = """
@@ -38,4 +39,8 @@ def page_not_found(request, exception):
     <p>Проверьте адрес или вернитесь на главную.</p>
     <a href="/" class="btn btn-primary">На главную</a>
     """
-    return HttpResponse(page("404 - Не найдено", content), status=404)
+
+    return HttpResponse(
+        page("404 - Не найдено", content),
+        status=404
+    )

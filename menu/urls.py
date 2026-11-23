@@ -6,6 +6,7 @@ urlpatterns = [
     path("", include("homepage.urls")),
     path("dishes/", include("dishes.urls")),
     path("ingredients/", include("ingredients.urls")),
+    path("meals/", include("meals.urls")),
 ]
 
 # Обработчик ошибки 404 (обязательно на уровне проекта)
