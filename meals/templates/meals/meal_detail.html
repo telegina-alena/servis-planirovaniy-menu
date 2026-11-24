@@ -1,0 +1,50 @@
+
+{% extends "base.html" %}
+
+{% block title %}
+    {% if meal %}
+        {{ meal.name|capfirst }} — Кулинарная книга
+    {% else %}
+        Приём пищи не найден
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+
+{% if meal %}
+
+    <div class="card">
+        <div class="card-body">
+
+            <h1 class="card-title">
+                {{ meal.name|capfirst }}
+            </h1>
+
+            <p class="card-text">
+                <strong>Рекомендация по сервировке:</strong>
+                {{ meal.suggestion }}
+            </p>
+
+        </div>
+    </div>
+
+{% else %}
+
+    <h1 class="text-danger">
+        Приём пищи не найден
+    </h1>
+
+    <p>
+        Указанный приём пищи отсутствует в справочнике.
+    </p>
+
+{% endif %}
+
+<a
+    href="{% url 'meals' %}"
+    class="btn btn-outline-secondary mt-3"
+>
+    ← к списку приёмов пищи
+</a>
+
+{% endblock %}

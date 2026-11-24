@@ -1,8 +1,8 @@
 
-from django.http import HttpResponse
-from django.utils.html import escape
+"""Представления для работы со страницами приёмов пищи."""
 
-from homepage.views import page
+from django.shortcuts import render
+
 from models.meals import Meal
 
 
@@ -11,33 +11,14 @@ def meals(request):
 
     available_meals = Meal.available_meals()
 
-    items = ""
+    context = {
+        "meals": available_meals,
+    }
 
-    for meal_name in available_meals:
-        items += (
-            '<li class="list-group-item">'
-            f'<a href="/meals/{meal_name}/">'
-            f'{escape(meal_name.capitalize())}'
-            '</a>'
-            '</li>'
-        )
-
-    content = f"""
-    <h1 class="mb-3">Приёмы пищи</h1>
-
-    <p>Выберите интересующий вас приём пищи:</p>
-
-    <ul class="list-group">
-        {items}
-    </ul>
-    """
-
-    return HttpResponse(
-        page(
-            "Приёмы пищи - Кулинарная книга",
-            content,
-            "meals"
-        )
+    return render(
+        request,
+        "meals/meal_list.html",
+        context,
     )
 
 
@@ -47,50 +28,21 @@ def meal_detail(request, meal_name):
     available_meals = Meal.available_meals()
 
     if meal_name.lower() not in available_meals:
-        content = """
-        <h1 class="text-danger">Приём пищи не найден</h1>
-
-        <a href="/meals/" class="btn btn-outline-secondary">
-            ← к списку приёмов пищи
-        </a>
-        """
-
-        return HttpResponse(
-            page(
-                "Приём пищи не найден",
-                content,
-                "meals"
-            ),
-            status=404
+        return render(
+            request,
+            "meals/meal_detail.html",
+            {"meal": None},
+            status=404,
         )
 
     meal = Meal(meal_name)
 
-    content = f"""
-    <div class="card">
-        <div class="card-body">
+    context = {
+        "meal": meal,
+    }
 
-            <h2 class="card-title">
-                {escape(meal.name.capitalize())}
-            </h2>
-
-            <p class="card-text">
-                <strong>Рекомендация по сервировке:</strong>
-                {escape(meal.suggestion())}
-            </p>
-
-            <a href="/meals/" class="btn btn-outline-secondary">
-                ← к списку приёмов пищи
-            </a>
-
-        </div>
-    </div>
-    """
-
-    return HttpResponse(
-        page(
-            f"{meal.name.capitalize()} - Кулинарная книга",
-            content,
-            "meals"
-        )
+    return render(
+        request,
+        "meals/meal_detail.html",
+        context,
     )
