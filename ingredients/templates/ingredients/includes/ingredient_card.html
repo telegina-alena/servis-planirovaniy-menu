@@ -1,0 +1,22 @@
+
+<div class="card">
+    <div class="card-body">
+
+        <h2 class="card-title">
+            {{ ingredient.name }}
+        </h2>
+
+        <p class="card-text">
+            <strong>Единица измерения:</strong>
+            {{ ingredient.unit }}
+        </p>
+
+        <a
+            href="{% url 'ingredient_detail' ingredient.id %}"
+            class="btn btn-primary"
+        >
+            Подробнее
+        </a>
+
+    </div>
+</div>

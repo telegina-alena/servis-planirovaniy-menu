@@ -1,0 +1,68 @@
+
+{% extends "base.html" %}
+
+{% block title %}
+    {% if dish %}
+        {{ dish.name }} — Кулинарная книга
+    {% else %}
+        Блюдо не найдено
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+
+{% if dish %}
+
+    <div class="card">
+        <div class="card-body">
+
+            <h1 class="card-title">
+                {{ dish.name }}
+            </h1>
+
+            <p class="card-text">
+                <strong>ID:</strong>
+                {{ dish.id }}
+            </p>
+
+            <p class="card-text">
+                <strong>Калорийность:</strong>
+                {{ dish.calories }} ккал
+            </p>
+
+            <p class="card-text">
+                <strong>Приём пищи:</strong>
+                {{ dish.meal }}
+            </p>
+
+            <p class="card-text">
+                <strong>Ингредиенты:</strong>
+                {{ dish.ingredients|join:", " }}
+            </p>
+
+            <p class="card-text">
+                <strong>Наличие ингредиентов:</strong>
+                {{ availability_text }}
+            </p>
+
+        </div>
+    </div>
+
+{% else %}
+
+    <h1 class="text-danger">Блюдо не найдено</h1>
+
+    <p>
+        Блюдо с указанным идентификатором отсутствует.
+    </p>
+
+{% endif %}
+
+<a
+    href="{% url 'dishes:list' %}"
+    class="btn btn-outline-secondary mt-3"
+>
+    ← к списку блюд
+</a>
+
+{% endblock %}

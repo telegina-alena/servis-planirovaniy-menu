@@ -10,7 +10,7 @@ class PageTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_dishes_page(self):
-        response = self.client.get(reverse("dishes"))
+        response = self.client.get(reverse("dishes:list"))
         self.assertEqual(response.status_code, 200)
 
     def test_ingredients_page(self):
