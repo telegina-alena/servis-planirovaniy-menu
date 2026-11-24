@@ -3,11 +3,11 @@
     <div class="card-body">
 
         <h2 class="card-title">
-            {{ meal|capfirst }}
+            {{ meal.name|capfirst }}
         </h2>
 
         <a
-            href="{% url 'meal_detail' meal %}"
+            href="{% url 'meals:meal_detail' meal.slug %}"
             class="btn btn-primary"
         >
             Подробнее

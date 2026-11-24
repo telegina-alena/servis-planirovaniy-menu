@@ -1,9 +1,12 @@
-
-"""Представления для работы со страницами приёмов пищи."""
-
 from django.shortcuts import render
-
 from models.meals import Meal
+
+
+MEAL_SLUGS = {
+    "breakfast": "завтрак",
+    "lunch": "обед",
+    "dinner": "ужин",
+}
 
 
 def meals(request):
@@ -11,8 +14,17 @@ def meals(request):
 
     available_meals = Meal.available_meals()
 
+    meals_list = [
+        {
+            "slug": slug,
+            "name": name,
+        }
+        for slug, name in MEAL_SLUGS.items()
+        if name in available_meals
+    ]
+
     context = {
-        "meals": available_meals,
+        "meals": meals_list,
     }
 
     return render(
@@ -22,12 +34,12 @@ def meals(request):
     )
 
 
-def meal_detail(request, meal_name):
+def meal_detail(request, meal_slug):
     """Отобразить информацию о выбранном приёме пищи."""
 
-    available_meals = Meal.available_meals()
+    meal_name = MEAL_SLUGS.get(meal_slug)
 
-    if meal_name.lower() not in available_meals:
+    if meal_name not in Meal.available_meals():
         return render(
             request,
             "meals/meal_detail.html",

@@ -11,12 +11,12 @@
             {{ ingredient.unit }}
         </p>
 
-        <a
-            href="{% url 'ingredient_detail' ingredient.id %}"
-            class="btn btn-primary"
-        >
-            Подробнее
-        </a>
+            <a
+                href="{% url 'ingredients:ingredient_detail' ingredient.id %}"
+                class="btn btn-primary"
+            >
+                Подробнее
+            </a>
 
     </div>
 </div>

@@ -17,38 +17,22 @@
 </head>
 <body>
 
-    <nav class="navbar navbar-expand bg-light border-bottom mb-4">
-        <div class="container">
-            <div class="navbar-nav">
-                <a class="nav-link {% if request.path == '/' %}active fw-semibold{% endif %}"
-                   href="/">
-                    Главная
-                </a>
-
-                <a class="nav-link {% if request.path|slice:':8' == '/dishes/' %}active fw-semibold{% endif %}"
-                   href="/dishes/">
-                    Блюда
-                </a>
-
-                <a class="nav-link {% if request.path|slice:':13' == '/ingredients/' %}active fw-semibold{% endif %}"
-                   href="/ingredients/">
-                    Ингредиенты
-                </a>
-
-                <a class="nav-link {% if request.path|slice:':7' == '/meals/' %}active fw-semibold{% endif %}"
-                   href="/meals/">
-                    Приёмы пищи
-                </a>
-            </div>
-        </div>
-    </nav>
+    {% include "includes/navigation.html" %}
 
     <main class="container">
         {% block content %}
         {% endblock %}
     </main>
 
+    <footer class="container mt-4 mb-3">
+        <p>
+            © <span id="current-year"></span> Кулинарная книга
+        </p>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="{% static 'js/main.js' %}"></script>
 
 </body>
 </html>

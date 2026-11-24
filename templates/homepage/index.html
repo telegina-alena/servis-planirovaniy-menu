@@ -15,15 +15,15 @@
 
 <p>Выберите интересующий вас раздел:</p>
 
-<a href="/dishes/" class="btn btn-primary me-2">
+<a href="{% url 'dishes:list' %}" class="btn btn-primary me-2">
     Блюда
 </a>
 
-<a href="/ingredients/" class="btn btn-outline-primary">
+<a href="{% url 'ingredients:ingredients' %}" class="btn btn-outline-primary">
     Ингредиенты
 </a>
 
-<a href="/meals/" class="btn btn-outline-secondary">
+<a href="{% url 'meals:meals' %}" class="btn btn-outline-secondary">
     Приёмы пищи
 </a>
 

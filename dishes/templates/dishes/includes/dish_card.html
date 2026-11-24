@@ -3,7 +3,7 @@
     <div class="card-body">
 
         <h2 class="card-title">
-            {{ dish.name }}
+            {{ dish.name|default:"Без названия" }}  
         </h2>
 
         <p class="card-text">

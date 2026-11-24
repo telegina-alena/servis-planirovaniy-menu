@@ -1,0 +1,36 @@
+
+<nav class="navbar navbar-expand bg-light border-bottom mb-4">
+    <div class="container">
+        <div class="navbar-nav">
+
+            <a
+                class="nav-link {% if request.resolver_match.namespace == 'homepage' %}active fw-semibold{% endif %}"
+                href="{% url 'homepage:index' %}"
+            >
+                Главная
+            </a>
+
+            <a
+                class="nav-link {% if request.resolver_match.namespace == 'dishes' %}active fw-semibold{% endif %}"
+                href="{% url 'dishes:list' %}"
+            >
+                Блюда
+            </a>
+
+            <a
+                class="nav-link {% if request.resolver_match.namespace == 'ingredients' %}active fw-semibold{% endif %}"
+                href="{% url 'ingredients:ingredients' %}"
+            >
+                Ингредиенты
+            </a>
+
+            <a
+                class="nav-link {% if request.resolver_match.namespace == 'meals' %}active fw-semibold{% endif %}"
+                href="{% url 'meals:meals' %}"
+            >
+                Приёмы пищи
+            </a>
+
+        </div>
+    </div>
+</nav>
