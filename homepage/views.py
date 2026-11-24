@@ -31,6 +31,7 @@ def page(title, content, active_page=None):
                 {nav_link("Главная", "/", "home")}
                 {nav_link("Блюда", "/dishes/", "dishes")}
                 {nav_link("Ингредиенты", "/ingredients/", "ingredients")}
+                {nav_link("Приёмы пищи", "/meals/", "meals")}
             </div>
         </div>
     </nav>
