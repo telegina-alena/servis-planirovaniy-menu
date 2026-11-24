@@ -1,0 +1,94 @@
+
+{% extends "base.html" %}
+
+{% block title %}Статистика - Кулинарная книга{% endblock %}
+
+{% block content %}
+
+<h1 class="mb-4">Статистика кулинарной книги</h1>
+
+<div class="row g-3 mb-4">
+
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Всего блюд</h5>
+                <p class="display-5">{{ dishes_count }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Всего ингредиентов</h5>
+                <p class="display-5">{{ ingredients_count }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Средняя калорийность</h5>
+                <p class="display-5">
+                    {{ average_calories }} ккал
+                </p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<h2 class="mb-3">Блюда по приёмам пищи</h2>
+
+<table class="table table-bordered table-striped mb-4">
+    <thead>
+        <tr>
+            <th>Приём пищи</th>
+            <th>Количество блюд</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in meals_statistics %}
+        <tr>
+            <td>{{ item.meal_name|capfirst }}</td>
+            <td>{{ item.dishes_count }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="2">Данных пока нет.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2 class="mb-3">Использование ингредиентов</h2>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Ингредиент</th>
+            <th>Количество блюд</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in ingredients_statistics %}
+        <tr>
+            <td>{{ item.ingredient_name }}</td>
+            <td>{{ item.dishes_count }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="2">Данных пока нет.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{% url 'homepage:index' %}"
+   class="btn btn-outline-secondary mb-4">
+    ← На главную
+</a>
+
+{% endblock %}

@@ -3,13 +3,28 @@
 
 from django.shortcuts import render
 
-from storage import load_ingredients
+from db.database import get_connection
 
 
 def ingredients(request):
     """Отобразить список всех ингредиентов."""
 
-    ingredients_list = load_ingredients()
+    conn = get_connection()
+
+    try:
+        ingredients_list = conn.execute(
+            """
+            SELECT
+                id,
+                name,
+                unit
+            FROM ingredients
+            ORDER BY name
+            """
+        ).fetchall()
+
+    finally:
+        conn.close()
 
     context = {
         "ingredients": ingredients_list,
@@ -25,15 +40,23 @@ def ingredients(request):
 def ingredient_detail(request, ingredient_id):
     """Отобразить подробную информацию об ингредиенте."""
 
-    ingredients_list = load_ingredients()
+    conn = get_connection()
 
-    ingredient = next(
-        (
-            item for item in ingredients_list
-            if item.id == ingredient_id
-        ),
-        None,
-    )
+    try:
+        ingredient = conn.execute(
+            """
+            SELECT
+                id,
+                name,
+                unit
+            FROM ingredients
+            WHERE id = ?
+            """,
+            (ingredient_id,),
+        ).fetchone()
+
+    finally:
+        conn.close()
 
     context = {
         "ingredient": ingredient,
