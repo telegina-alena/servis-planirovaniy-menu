@@ -1,10 +1,9 @@
 from typing import Iterable
-
-from .ingredients import Ingredient
 from .meals import Meal
 
 
 class Dish:
+    """Класс блюда."""
 
     def __init__(
         self,
@@ -32,15 +31,19 @@ class Dish:
     def is_available(self, available: Iterable[str]) -> str:
         available_set = {i.strip().lower() for i in available}
         missing = [i for i in self.ingredients if i not in available_set]
+
         if missing:
             return f"Не хватает ингредиентов: {', '.join(missing)}"
+
         return f"Все ингредиенты есть! Можно готовить {self.name}"
 
     def calories_per_portion(self, portions: int = 1) -> str:
         if portions <= 0:
             return "Количество порций должно быть больше нуля."
+
         per_portion = self.calories // portions
         level = self.calorie_level(per_portion)
+
         return f"{self.name} - {per_portion} ккал - {level}"
 
     @staticmethod
@@ -56,7 +59,6 @@ class Dish:
 
     def uses_ingredient(self, ingredient_name: str) -> bool:
         return ingredient_name.strip().lower() in self.ingredients
-
 
     @classmethod
     def from_data(cls, data: dict) -> "Dish":
@@ -79,7 +81,12 @@ class Dish:
 
     @staticmethod
     def validate_calories(calories: int) -> bool:
-        return isinstance(calories, int) and calories > 0
+        return (
+            isinstance(calories, int)
+            and not isinstance(calories, bool)
+            and calories > 0
+        )
+
 
 def add_dish(
     dishes: list[Dish],
@@ -89,8 +96,10 @@ def add_dish(
     meal: str,
 ) -> Dish:
     new_id = max((d.id for d in dishes), default=0) + 1
+
     dish = Dish(new_id, name, ingredients, calories, meal)
     dishes.append(dish)
+
     return dish
 
 
@@ -103,6 +112,7 @@ def find_dish_by_id(dishes: list[Dish], dish_id: int) -> Dish | None:
     for dish in dishes:
         if dish.id == dish_id:
             return dish
+
     return None
 
 
@@ -125,8 +135,14 @@ def show_dishes(dishes: list[Dish]) -> None:
     if not dishes:
         print("Список блюд пуст.")
         return
+
     header = f"{'ID':<4}{'Название':<25}{'Ккал':<8}{'Приём пищи':<12}"
+
     print(header)
     print("-" * 50)
+
     for d in dishes:
-        print(f"{d.id:<4}{d.name:<25}{d.calories:<8}{d.meal:<12}")
+        print(
+            f"{d.id:<4}{d.name:<25}"
+            f"{d.calories:<8}{d.meal.name:<12}"
+        )

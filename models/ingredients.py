@@ -8,7 +8,7 @@ class Ingredient:
         """Создать объект ингредиента."""
         self.id = ingredient_id
         self.name = name.strip().lower()
-        self.unit = unit
+        self.unit = unit.strip()
 
     def __str__(self) -> str:
         """Строковое представление ингредиента."""
