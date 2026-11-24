@@ -1,9 +1,10 @@
 
 from django.http import HttpResponse
+from django.shortcuts import render
 
 
 def page(title, content, active_page=None):
-    """Формирует общую HTML-страницу с навигацией."""
+    """Временная функция для старых представлений."""
 
     bootstrap = (
         "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/"
@@ -12,8 +13,8 @@ def page(title, content, active_page=None):
 
     def nav_link(label, url, key):
         active = active_page == key
-
         css_class = "nav-link"
+
         if active:
             css_class += " active fw-semibold"
 
@@ -44,20 +45,9 @@ def page(title, content, active_page=None):
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{title}</title>
     <link rel="stylesheet" href="{bootstrap}">
-    <style>
-        .nav-link.active {{
-            color: #0d6efd !important;
-            border-bottom: 2px solid #0d6efd;
-        }}
-
-        main {{
-            max-width: 900px;
-        }}
-    </style>
 </head>
 <body>
     {navigation}
-
     <main class="container">
         {content}
     </main>
@@ -68,31 +58,7 @@ def page(title, content, active_page=None):
 def index(request):
     """Главная страница проекта."""
 
-    content = """
-    <h1 class="display-5">Кулинарная книга</h1>
-
-    <p class="lead">
-        Сервис планирования меню и расчёта калорий.
-    </p>
-
-    <p>Выберите интересующий вас раздел:</p>
-
-    <a href="/dishes/" class="btn btn-primary me-2">
-        Блюда
-    </a>
-
-    <a href="/ingredients/" class="btn btn-outline-primary">
-        Ингредиенты
-    </a>
-    """
-
-    return HttpResponse(
-        page(
-            "Главная - Кулинарная книга",
-            content,
-            "home"
-        )
-    )
+    return render(request, "homepage/index.html")
 
 
 def page_not_found(request, exception):
@@ -100,12 +66,8 @@ def page_not_found(request, exception):
 
     content = """
     <h1 class="text-danger">404 — Страница не найдена</h1>
-
     <p>Проверьте адрес или вернитесь на главную.</p>
-
-    <a href="/" class="btn btn-primary">
-        На главную
-    </a>
+    <a href="/" class="btn btn-primary">На главную</a>
     """
 
     return HttpResponse(

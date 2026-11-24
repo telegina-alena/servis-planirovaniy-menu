@@ -1,80 +1,30 @@
-{% extends 'base.html' %}
+
+{% extends "base.html" %}
 
 {% block title %}
-Главная — Сервис планирования меню
+Главная — Кулинарная книга
 {% endblock %}
 
 {% block content %}
 
-<div class="p-5 mb-4 bg-light rounded-3">
-    <div class="container-fluid py-3">
-        <h1 class="display-5 fw-bold">
-            Добро пожаловать!
-        </h1>
+<h1 class="display-5">Кулинарная книга</h1>
 
-        <p class="col-md-8 fs-5">
-            Сервис планирования меню поможет организовать
-            питание, подобрать блюда и рассчитать
-            калорийность рациона.
-        </p>
+<p class="lead">
+    Сервис планирования меню и расчёта калорий.
+</p>
 
-        <a href="{% url 'dishes' %}"
-           class="btn btn-primary btn-lg">
-            Посмотреть блюда
-        </a>
-    </div>
-</div>
+<p>Выберите интересующий вас раздел:</p>
 
-<div class="row g-4">
+<a href="/dishes/" class="btn btn-primary me-2">
+    Блюда
+</a>
 
-    <div class="col-md-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <h5 class="card-title">Блюда</h5>
-                <p class="card-text">
-                    Изучайте доступные блюда и выбирайте
-                    подходящие для своего меню.
-                </p>
-                <a href="{% url 'dishes' %}"
-                   class="btn btn-outline-primary">
-                    Перейти к блюдам
-                </a>
-            </div>
-        </div>
-    </div>
+<a href="/ingredients/" class="btn btn-outline-primary">
+    Ингредиенты
+</a>
 
-    <div class="col-md-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <h5 class="card-title">Ингредиенты</h5>
-                <p class="card-text">
-                    Просматривайте ингредиенты,
-                    необходимые для приготовления блюд.
-                </p>
-                <a href="{% url 'ingredients' %}"
-                   class="btn btn-outline-primary">
-                    Перейти к ингредиентам
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <h5 class="card-title">Приёмы пищи</h5>
-                <p class="card-text">
-                    Организуйте своё питание
-                    в течение дня.
-                </p>
-                <a href="{% url 'meals' %}"
-                   class="btn btn-outline-primary">
-                    Перейти к приёмам пищи
-                </a>
-            </div>
-        </div>
-    </div>
-
-</div>
+<a href="/meals/" class="btn btn-outline-secondary">
+    Приёмы пищи
+</a>
 
 {% endblock %}
