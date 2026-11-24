@@ -1,10 +1,5 @@
-
-"""Представления для работы со страницами приёмов пищи."""
-
 from django.shortcuts import render
-
-from db.database import get_connection
-from models.meals import Meal
+from .models import Meal
 
 
 MEAL_SLUGS = {
@@ -17,19 +12,9 @@ MEAL_SLUGS = {
 def meals(request):
     """Отобразить список доступных приёмов пищи."""
 
-    conn = get_connection()
-
-    try:
-        available_meals = conn.execute(
-            "SELECT name FROM meals ORDER BY id"
-        ).fetchall()
-
-    finally:
-        conn.close()
-
-    available_names = {
-        item["name"] for item in available_meals
-    }
+    available_names = set(
+        Meal.objects.values_list("name", flat=True)
+    )
 
     meals_list = [
         {
@@ -56,29 +41,12 @@ def meal_detail(request, meal_slug):
 
     meal_name = MEAL_SLUGS.get(meal_slug)
 
-    conn = get_connection()
+    meal = None
 
-    try:
-        meal_data = None
-
-        if meal_name is not None:
-            meal_data = conn.execute(
-                "SELECT id, name FROM meals WHERE name = ?",
-                (meal_name,),
-            ).fetchone()
-
-    finally:
-        conn.close()
-
-    if meal_data is None:
-        return render(
-            request,
-            "meals/meal_detail.html",
-            {"meal": None},
-            status=404,
-        )
-
-    meal = Meal(meal_data["name"])
+    if meal_name is not None:
+        meal = Meal.objects.filter(
+            name=meal_name
+        ).first()
 
     context = {
         "meal": meal,
@@ -88,4 +56,5 @@ def meal_detail(request, meal_slug):
         request,
         "meals/meal_detail.html",
         context,
+        status=404 if meal is None else 200,
     )
