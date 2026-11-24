@@ -1,32 +1,17 @@
-
-"""Представления для работы со страницами блюд."""
-
 from django.shortcuts import render
-
-from db.database import get_connection
+from .models import Dish
+from ingredients.models import Ingredient
 
 
 def dishes(request):
     """Отобразить список всех блюд."""
 
-    conn = get_connection()
-
-    try:
-        dishes_list = conn.execute(
-            """
-            SELECT
-                dishes.id,
-                dishes.name,
-                dishes.calories,
-                meals.name AS meal
-            FROM dishes
-            JOIN meals ON dishes.meal_id = meals.id
-            ORDER BY dishes.name
-            """
-        ).fetchall()
-
-    finally:
-        conn.close()
+    dishes_list = (
+        Dish.objects
+        .select_related("meal")
+        .prefetch_related("ingredients")
+        .all()
+    )
 
     context = {
         "dishes": dishes_list,
@@ -42,72 +27,25 @@ def dishes(request):
 def dish_detail(request, dish_id):
     """Отобразить подробную информацию о выбранном блюде."""
 
-    conn = get_connection()
+    dish = (
+        Dish.objects
+        .select_related("meal")
+        .prefetch_related("ingredients")
+        .filter(id=dish_id)
+        .first()
+    )
 
-    try:
-        dish = conn.execute(
-            """
-            SELECT
-                dishes.id,
-                dishes.name,
-                dishes.calories,
-                meals.name AS meal
-            FROM dishes
-            JOIN meals ON dishes.meal_id = meals.id
-            WHERE dishes.id = ?
-            """,
-            (dish_id,),
-        ).fetchone()
+    availability_text = ""
 
-        if dish is not None:
-            ingredients = conn.execute(
-                """
-                SELECT ingredients.name
-                FROM ingredients
-                JOIN dish_ingredients
-                    ON ingredients.id = dish_ingredients.ingredient_id
-                WHERE dish_ingredients.dish_id = ?
-                ORDER BY ingredients.name
-                """,
-                (dish_id,),
-            ).fetchall()
+    if dish is not None:
+        available_ingredients = Ingredient.objects.values_list(
+            "name",
+            flat=True,
+        )
 
-            ingredient_list = [
-                item["name"] for item in ingredients
-            ]
-
-            available = {
-                item["name"]
-                for item in conn.execute(
-                    "SELECT name FROM ingredients"
-                ).fetchall()
-            }
-
-            missing = [
-                name
-                for name in ingredient_list
-                if name not in available
-            ]
-
-            dish = dict(dish)
-            dish["ingredients"] = ingredient_list
-
-            if missing:
-                availability_text = (
-                    "Не хватает ингредиентов: "
-                    + ", ".join(missing)
-                )
-            else:
-                availability_text = (
-                    f"Все ингредиенты есть! "
-                    f"Можно готовить {dish['name']}"
-                )
-
-        else:
-            availability_text = ""
-
-    finally:
-        conn.close()
+        availability_text = dish.is_available(
+            available_ingredients
+        )
 
     context = {
         "dish": dish,
