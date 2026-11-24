@@ -1,68 +1,71 @@
 
 {% extends "base.html" %}
 
-{% block title %}
-    {% if dish %}
-        {{ dish.name }} — Кулинарная книга
-    {% else %}
-        Блюдо не найдено
-    {% endif %}
-{% endblock %}
+{% block title %}{{ dish.name }} — Кулинарная книга{% endblock %}
 
 {% block content %}
 
 {% if dish %}
 
-    <div class="card">
-        <div class="card-body">
+<div class="card">
+    <div class="card-body">
 
-            <h1 class="card-title">
-                {{ dish.name }}
-            </h1>
+        <h1 class="card-title">{{ dish.name }}</h1>
 
-            <p class="card-text">
-                <strong>ID:</strong>
-                {{ dish.id }}
-            </p>
+        <p>
+            <strong>ID:</strong> {{ dish.id }}
+        </p>
 
-            <p class="card-text">
-                <strong>Калорийность:</strong>
-                {{ dish.calories }} ккал
-            </p>
+        <p>
+            <strong>Калорийность:</strong>
+            {{ dish.calories }} ккал
+        </p>
 
-            <p class="card-text">
-                <strong>Приём пищи:</strong>
-                {{ dish.meal }}
-            </p>
+        <p>
+            <strong>Приём пищи:</strong>
+            {{ dish.meal }}
+        </p>
 
-            <p class="card-text">
-                <strong>Ингредиенты:</strong>
-                {{ dish.ingredients|join:", " }}
-            </p>
+        <div class="mb-3">
+            <strong>Ингредиенты:</strong>
 
-            <p class="card-text">
-                <strong>Наличие ингредиентов:</strong>
-                {{ availability_text }}
-            </p>
-
+            <ul class="mt-2">
+                {% for ingredient in dish.ingredients.all %}
+                    <li>
+                        {{ ingredient.name }} ({{ ingredient.unit }})
+                    </li>
+                {% empty %}
+                    <li class="text-muted">
+                        Ингредиенты не добавлены.
+                    </li>
+                {% endfor %}
+            </ul>
         </div>
+
+        <p>
+            <strong>Наличие ингредиентов:</strong>
+            {{ availability_text }}
+        </p>
+
+        <a href="{% url 'dishes:edit' dish.id %}"
+           class="btn btn-primary">
+            Редактировать
+        </a>
+
     </div>
+</div>
 
 {% else %}
 
-    <h1 class="text-danger">Блюдо не найдено</h1>
+<h1 class="text-danger">Блюдо не найдено</h1>
 
-    <p>
-        Блюдо с указанным идентификатором отсутствует.
-    </p>
+<p>Блюдо с указанным идентификатором отсутствует.</p>
 
 {% endif %}
 
-<a
-    href="{% url 'dishes:list' %}"
-    class="btn btn-outline-secondary mt-3"
->
-    ← к списку блюд
+<a href="{% url 'dishes:list' %}"
+   class="btn btn-outline-secondary mt-3">
+    ← К списку блюд
 </a>
 
 {% endblock %}
